@@ -1,6 +1,7 @@
 {
     "name": "sopheos/pebble_cron",
     "description": "cron by sopheos",
+    "license": "MIT",
     "require": {
         "php": ">=8.1.0"
     },
