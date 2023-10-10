@@ -24,7 +24,7 @@ class Lock
      * @throws Exception
      * @throws InfoException
      */
-    public function acquire(): bool
+    public function acquire()
     {
         if ($this->lockHandle) {
             throw new Exception("Lock already acquired (Lockfile: {$this->lockFile}).");
@@ -52,7 +52,7 @@ class Lock
             --$attempts;
         }
 
-        throw false;
+        throw new Exception("Too much attempts (Lockfile: {$this->lockFile}).");
     }
 
     /**

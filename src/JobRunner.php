@@ -35,18 +35,13 @@ class JobRunner
             $this->checkMaxRuntime();
         } catch (Exception $ex) {
             $this->log("Warning", $ex->getMessage());
-            return $this->writeLogs();;
+            return $this->writeLogs();
         }
 
         // Aquisition du verrou
         try {
-            $lockAcquired = $this->lock->acquire();
+            $this->lock->acquire();
         } catch (Exception $ex) {
-            trigger_error($ex);
-        }
-
-        // En cours d'execution
-        if (!$lockAcquired) {
             return $this->writeLogs();
         }
 
