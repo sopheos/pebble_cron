@@ -7,12 +7,12 @@ class Lock
     /**
      * @var string
      */
-    private $lockFile;
+    private string $lockFile = '';
 
     /**
      * @var resource
      */
-    private $lockHandle;
+    private mixed $lockHandle = null;
 
 
     public function __construct(string $lockFile)
@@ -60,20 +60,15 @@ class Lock
      */
     public function release()
     {
-        if ($this->lockHandle === null) {
-            throw new Exception("Lock NOT held - bug? Lockfile: {$this->lockFile}");
-        }
-
         if ($this->lockHandle) {
             ftruncate($this->lockHandle, 0);
-            flock($this->lockHandle, LOCK_UN);
+            fclose($this->lockHandle);
+            $this->lockHandle = null;
         }
 
         if (file_exists($this->lockFile)) {
             unlink($this->lockFile);
         }
-
-        $this->lockHandle = null;
     }
 
     /**
