@@ -131,7 +131,8 @@ class JobRunner
             return;
         }
 
-        $this->logs = json_decode(file_get_contents($this->filename . '.json'), true);
+        $logs = json_decode(file_get_contents($this->filename . '.json'), true);
+        $this->logs = is_array($logs) ? $logs : [];
     }
 
     protected function writeLogs()
