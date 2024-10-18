@@ -20,9 +20,9 @@ class Job implements JsonSerializable
 
     /**
      * @param string $command
-     * @return Job
+     * @return static
      */
-    public function command(string $command): Job
+    public function command(string $command): static
     {
         $this->command = $command;
         return $this;
@@ -30,44 +30,49 @@ class Job implements JsonSerializable
 
     /**
      * @param string $schedule
-     * @return Job
+     * @return static
      */
-    public function schedule(string $schedule): Job
+    public function schedule(string $schedule): static
     {
         $this->schedule = $schedule;
         return $this;
     }
 
-    /**
-     * @return Job
-     */
-    public function minutly(): Job
+    public function every($minute = "*", $hour = "*", $dayMonth = "*", $month = "*", $dayWeek = "*"): static
     {
-        return $this->schedule("* * * * *");
+        return $this->schedule("{$minute} {$hour} {$dayMonth} {$month} {$dayWeek}");
     }
 
     /**
-     * @return Job
+     * @return static
      */
-    public function hourly(): Job
+    public function minutly(): static
     {
-        return $this->schedule("0 * * * *");
+        return $this->every();
+    }
+
+    /**
+     * @return static
+     */
+    public function hourly(): static
+    {
+        return $this->every(minute: 0);
     }
 
     /**
      * @param integer $hour
-     * @return Job
+     * @return static
      */
-    public function daily(int $hour): Job
+    public function daily(int $hour): static
     {
-        return $this->schedule("0 {$hour} * * *");
+        return $this->every(hour: $hour);
     }
 
     /**
      * @param integer $max
-     * @return Job
+     * @return static
      */
-    public function maxRuntime(int $max): Job
+    public function maxRuntime(int $max): static
     {
         $this->max_runtime = $max;
         return $this;
@@ -75,9 +80,9 @@ class Job implements JsonSerializable
 
     /**
      * @param string $out
-     * @return Job
+     * @return static
      */
-    public function stdout(string $out): Job
+    public function stdout(string $out): static
     {
         $this->stdout = $out;
         return $this;
@@ -85,9 +90,9 @@ class Job implements JsonSerializable
 
     /**
      * @param string $out
-     * @return Job
+     * @return static
      */
-    public function stderr(string $out): Job
+    public function stderr(string $out): static
     {
         $this->stderr = $out;
         return $this;
