@@ -65,7 +65,7 @@ class Job implements JsonSerializable
      */
     public function daily(int $hour): static
     {
-        return $this->every(hour: $hour);
+        return $this->every(hour: $hour, minute: 0);
     }
 
     /**
@@ -119,12 +119,12 @@ class Job implements JsonSerializable
         }
 
         return [
-            'name' => $this->name,
-            'command' => $this->command,
-            'schedule' => $this->schedule,
+            'name'        => $this->name,
+            'command'     => $this->command,
+            'schedule'    => $this->schedule,
             'max_runtime' => $this->max_runtime,
-            'stdout' => $this->stdout,
-            'stderr' => $this->stderr,
+            'stdout'      => $this->stdout,
+            'stderr'      => $this->stderr,
         ];
     }
 
