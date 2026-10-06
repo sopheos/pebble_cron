@@ -1,9 +1,10 @@
 {
     "name": "sopheos/pebble_cron",
-    "description": "cron by sopheos",
+    "description": "Cron runner that launches each due job in a background PHP process, with lock, crash and JSON log files",
     "license": "MIT",
     "require": {
         "php": ">=8.5.0",
+        "ext-posix": "*",
         "symfony/process": "^8",
         "dragonmantank/cron-expression": "^3.6"
     },
