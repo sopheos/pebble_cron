@@ -50,7 +50,7 @@ class JobRunnerTest extends TestCase
         self::assertSame('Info', $logs[0]['status']);
         self::assertSame('Fini en 0s', $logs[0]['message']);
         self::assertSame(['ref', 'date', 'status', 'message'], array_keys($logs[0]));
-        self::assertFileDoesNotExist($this->dir . 'my_job.lock');
+        self::assertSame('', file_get_contents($this->dir . 'my_job.lock'));
     }
 
     public function testOutputsAreAppendedToTheirFiles()

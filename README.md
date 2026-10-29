@@ -83,7 +83,7 @@ Le log `<nom>.json` contient les 100 dernières entrées `{ref, date, status, me
 `\Pebble\Cron\Lock` est un verrou `flock` sur un fichier.
 
 * `acquire() : true` Écrit le PID dans le fichier. Lève `Exception` si le verrou est déjà pris par cette instance, ou après 5 essais non bloquants (environ 1 ms en tout).
-* `release()` Libère le verrou et supprime le fichier.
+* `release()` Vide le fichier et libère le verrou. Le fichier n'est pas supprimé, pour que tous les processus verrouillent toujours le même fichier.
 * `getLifetime() : int` Âge en secondes du fichier si le PID qu'il contient est vivant (`posix_kill`), sinon `0`.
 
 ## ScheduleChecker

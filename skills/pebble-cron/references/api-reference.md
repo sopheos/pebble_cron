@@ -61,7 +61,7 @@ State files, all `<tmpdir><Helper::escape(name)>.*`:
 
 | File | Meaning |
 | ---- | ------- |
-| `.lock` | `flock`ed while the job runs. Contains the PID. Deleted on release |
+| `.lock` | `flock`ed while the job runs. Contains the PID. Emptied (not deleted) on release |
 | `.crash` | Written (date) when the command exits non-zero. Blocks every later run |
 | `.disabled` | Created by hand. Skips the job |
 | `.json` | Last 100 log entries `{ref, date, status, message}`. Status `Info` (`Fini en Ns`), `Warning` (max runtime), `Error` (exit code) |
@@ -73,7 +73,7 @@ The command runs as `<command> 1>> "<stdout>" 2>> "<stderr>"` through `exec()`.
 | Intent | Method |
 | ------ | ------ |
 | Take the lock, write the PID, return `true` | `acquire()` |
-| Unlock and delete the file | `release()` |
+| Empty the file and unlock it (the file is kept) | `release()` |
 | Seconds since the file's mtime if its PID is alive, else `0` | `getLifetime(): int` |
 
 `acquire()` throws `Pebble\Cron\Exception` when the instance already holds the lock, when the file can't be created or opened, or after 5 failed `LOCK_EX | LOCK_NB` attempts.

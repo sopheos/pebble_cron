@@ -65,10 +65,6 @@ class Lock
             fclose($this->lockHandle);
             $this->lockHandle = null;
         }
-
-        if (file_exists($this->lockFile)) {
-            unlink($this->lockFile);
-        }
     }
 
     /**

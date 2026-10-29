@@ -20,10 +20,6 @@ Problèmes restant à traiter, détectés lors de l'audit du 2026-10-06. Le code
   - `usleep(250)` attend 0,25 ms. L'intention était probablement 250 ms. La boucle de 5 essais abandonne donc en environ 1,25 ms et ne sert à rien.
   - Correctif : `usleep(250000)`.
   - Test : `tests/LockTest.php::testAcquireGivesUpAfterAboutOneMillisecond`.
-- [ ] **`release()` supprime le fichier de verrou, ce qui permet deux détenteurs simultanés.** `src/Lock.php:69-71`.
-  - Un processus qui a ouvert le fichier avant le `release()` verrouille ensuite l'inode supprimé, pendant qu'un nouveau processus crée un nouveau fichier et le verrouille aussi. Le cas est rare, car la fenêtre d'essai fait environ 1 ms, mais deux exécutions du même job peuvent alors se chevaucher.
-  - Correctif : ne pas supprimer le fichier (le vider suffit), ou vérifier après `flock()` que l'inode du handle est toujours celui du chemin.
-  - Test : `tests/LockTest.php::testReleaseUnlinksTheFileSoAStaleHandleAndANewLockBothSucceed`.
 
 ## Dette / qualité
 

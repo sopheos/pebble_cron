@@ -38,7 +38,7 @@ Things the method names don't tell you, grouped by class. Every item below is pi
 - **A lock held by a running job skips the run with no log entry.**
 - **Output is appended** to the `stdout`/`stderr` files, never truncated.
 - **The JSON log keeps the last 100 entries.** Each one has `ref`, `date`, `status` and `message`. A success is `Info`/`Fini en Ns`.
-- **The lock file is removed after the run.**
+- **The lock file is emptied after the run, not removed.** `<name>.lock` stays in `tmpdir`.
 - **(bug) Only the last command of a shell list is redirected.** `echo first; echo second` writes only `second` to the stdout file. Wrap lists in `sh -c '…'`.
 
 ## Lock
@@ -46,10 +46,9 @@ Things the method names don't tell you, grouped by class. Every item below is pi
 - **`acquire()` writes the PID into the file** and returns `true`.
 - **Acquiring twice on the same instance throws** `Lock already acquired`. **A second instance on the same file throws** `Too much attempts`.
 - **`acquire()` throws when the file can't be created**, e.g. in a missing directory.
-- **`release()` deletes the file**, even if this instance never acquired it.
+- **`release()` empties and closes the file without deleting it**, so every process always locks the same inode. Without a prior `acquire()` it does nothing.
 - **`getLifetime()` is `0` without file, without PID, or when the PID is dead.** Otherwise it is the file's age in seconds.
 - **(bug) The 5 attempts last about 1 ms in total** (`usleep(250)` instead of 250 ms).
-- **(bug) Deleting the file on release allows two holders.** A handle opened before the release can lock the deleted inode while a new `Lock` creates and locks a new file.
 
 ## Helper
 

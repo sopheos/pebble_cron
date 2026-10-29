@@ -64,22 +64,40 @@ class LockTest extends TestCase
         }
     }
 
-    public function testReleaseDeletesTheLockFile()
+    public function testReleaseEmptiesTheLockFileWithoutDeletingIt()
     {
         $lock = new Lock($this->file);
         $lock->acquire();
         $lock->release();
 
-        self::assertFileDoesNotExist($this->file);
+        self::assertSame('', file_get_contents($this->file));
         self::assertTrue((new Lock($this->file))->acquire());
     }
 
-    public function testReleaseWithoutAcquireDeletesAnExistingFile()
+    public function testReleaseWithoutAcquireLeavesTheFileUntouched()
     {
         file_put_contents($this->file, '123');
         (new Lock($this->file))->release();
 
-        self::assertFileDoesNotExist($this->file);
+        self::assertSame('123', file_get_contents($this->file));
+    }
+
+    public function testAHandleOpenedBeforeTheReleaseAndANewLockCannotBothSucceed()
+    {
+        $first = new Lock($this->file);
+        $first->acquire();
+        $stale = fopen($this->file, 'rb+');
+        $first->release();
+
+        self::assertTrue(flock($stale, LOCK_EX | LOCK_NB));
+
+        try {
+            $this->expectException(Exception::class);
+            $this->expectExceptionMessage('Too much attempts');
+            (new Lock($this->file))->acquire();
+        } finally {
+            fclose($stale);
+        }
     }
 
     public function testAcquireFailsInAMissingDirectory()
@@ -138,23 +156,5 @@ class LockTest extends TestCase
         $first->release();
 
         self::assertLessThan(0.1, $elapsed);
-    }
-
-    public function testReleaseUnlinksTheFileSoAStaleHandleAndANewLockBothSucceed()
-    {
-        // BUG: release() unlinks the file after unlocking it. A process that opened
-        // the old file before the release locks the deleted inode, while a new
-        // process creates and locks a new file: both believe they hold the lock.
-        $first = new Lock($this->file);
-        $first->acquire();
-        $stale = fopen($this->file, 'rb+');
-        $first->release();
-
-        $second = new Lock($this->file);
-        self::assertTrue($second->acquire());
-        self::assertTrue(flock($stale, LOCK_EX | LOCK_NB));
-
-        fclose($stale);
-        $second->release();
     }
 }

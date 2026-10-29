@@ -91,7 +91,7 @@ The escaped name is lower-cased, keeps `[a-z0-9_.-]` and turns spaces into `_`. 
 - **Only the last command of `a; b` / `a && b` is redirected (bug).** Wrap lists in `sh -c '…'`.
 - **Output is appended (`>>`), never rotated.** The JSON log keeps the last 100 entries.
 - **`ScheduleChecker` emits two `E_DEPRECATED` on load under PHP 8.4+ (bug).** Expect them in logs and in PHPUnit output.
-- **The lock retries for about 1 ms in total (bug)**, and `release()` deletes the lock file, which leaves a tiny window for two concurrent runs of the same job.
+- **The lock retries for about 1 ms in total (bug).** `release()` empties the lock file but keeps it, so it is safe to call.
 - **Names are escaped for file names.** Two names that differ only by case or punctuation share the same state files, and a name made only of non-ASCII or symbols becomes `<tmpdir>/.lock`.
 - **`cron.json` is not prefixed by `app`.** Give each application its own `tmpdir`.
 - **The method is spelled `minutly()`.** There is no `minutely()`.

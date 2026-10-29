@@ -105,7 +105,7 @@ class CronTest extends TestCase
         self::assertTrue($this->waitFor($this->dir . '/test_due.json'));
         self::assertFileExists($this->dir . '/due.done');
 
-        for ($i = 0; $i < 100 && is_file($this->dir . '/test_due.lock'); $i++) {
+        for ($i = 0; $i < 100 && file_get_contents($this->dir . '/test_due.lock') !== ''; $i++) {
             usleep(10000);
         }
         self::assertFileDoesNotExist($this->dir . '/later.done');
