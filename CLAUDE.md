@@ -39,7 +39,6 @@ vendor/bin/phpunit --filter JobRunnerTest
 - Les classes de test n'ont pas de namespace. Les méthodes s'appellent `testPhraseEnCamelCase`, les assertions passent par `self::assertSame`, et des bannières `// ----` séparent les sections.
 - Chaque test travaille dans un dossier `sys_get_temp_dir()/pebble_cron_*` qu'il supprime dans `tearDown()`.
 - `JobRunnerTest` exécute de vraies commandes shell inoffensives (`true`, `touch`, `echo`). `CronTest` lance un vrai job en arrière-plan et attend son log (quelques dizaines de ms).
-- La suite affiche « Deprecations: 2 » : c'est le bug des paramètres implicitement nullables de `ScheduleChecker` (voir `TODO.md`), pas une erreur des tests.
 
 ## Conventions du code
 

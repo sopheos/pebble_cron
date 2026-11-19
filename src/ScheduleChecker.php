@@ -14,7 +14,7 @@ class ScheduleChecker
      */
     private $now;
 
-    public function __construct(DateTimeImmutable $now = null)
+    public function __construct(?DateTimeImmutable $now = null)
     {
         $this->now = $now instanceof DateTimeImmutable ? $now : new DateTimeImmutable("now");
     }
@@ -38,7 +38,7 @@ class ScheduleChecker
         return $cronExpr->isDue($this->now);
     }
 
-    private static function isCallable($value, bool $syntax_only = false, string &$callable_name = null)
+    private static function isCallable($value, bool $syntax_only = false, ?string &$callable_name = null)
     {
         if (is_array($value) && isset($value[0], $value[1]) && is_string($value[0]) && is_string($value[1])) {
             try {

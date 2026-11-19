@@ -100,20 +100,11 @@ class ScheduleCheckerTest extends TestCase
         self::assertStringContainsString('ScheduleTarget::nonStatic', $messages[0]);
     }
 
-    // -------------------------------------------------------------------------
-    // Known bugs (see TODO.md)
-    // -------------------------------------------------------------------------
-
-    public function testLoadingTheClassEmitsImplicitNullableDeprecations()
+    public function testLoadingTheClassEmitsNoDeprecation()
     {
-        // BUG: `DateTimeImmutable $now = null` and `string &$callable_name = null`
-        // are implicitly nullable, deprecated since PHP 8.4: every load of the class
-        // emits two E_DEPRECATED.
         $file = escapeshellarg(__DIR__ . '/../src/ScheduleChecker.php');
         $output = shell_exec(escapeshellarg(PHP_BINARY) . " -d error_reporting=-1 -d display_errors=stdout -d log_errors=0 -l $file");
 
-        self::assertSame(2, substr_count($output, 'Implicitly marking parameter'));
-        self::assertStringContainsString('$now', $output);
-        self::assertStringContainsString('$callable_name', $output);
+        self::assertStringNotContainsString('Deprecated', $output);
     }
 }

@@ -27,7 +27,6 @@ Things the method names don't tell you, grouped by class. Every item below is pi
 - **A callable receives the reference `DateTimeImmutable`.**
 - **A non-static `[Class::class, 'method']` triggers an `E_USER_DEPRECATED`, then a `TypeError`**, because it is not callable and falls through to `DateTime::createFromFormat()`.
 - **`new ScheduleChecker()` uses the current time.**
-- **(bug) Loading the class emits two `E_DEPRECATED` on PHP 8.4+** (implicitly nullable `$now` and `$callable_name`).
 
 ## JobRunner
 

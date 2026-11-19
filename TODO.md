@@ -4,10 +4,6 @@ Problèmes restant à traiter, détectés lors de l'audit du 2026-10-06. Le code
 
 ## Bugs
 
-- [ ] **Paramètres implicitement nullables, dépréciés en PHP 8.4+.** `src/ScheduleChecker.php:17, 41`.
-  - `DateTimeImmutable $now = null` et `string &$callable_name = null` émettent deux `E_DEPRECATED` à chaque chargement de la classe, donc à chaque `Cron::run()`. La lib exige PHP 8.5 : ces avertissements polluent les logs et deviendront une erreur dans une version future. PHPUnit les compte (« Deprecations: 2 »).
-  - Correctif : `?DateTimeImmutable $now = null` et `?string &$callable_name = null`.
-  - Test : `tests/ScheduleCheckerTest.php::testLoadingTheClassEmitsImplicitNullableDeprecations`.
 - [ ] **`Cron::add()` copie `stdout` dans `stderr`.** `src/Cron.php:60`.
   - `$job->stderr($this->config['stdout'])` : la clé de config `stderr` est ignorée. Les erreurs des jobs partent dans le fichier de sortie standard (ou dans `/dev/null` si seul `stderr` est configuré).
   - Correctif : `$job->stderr($this->config['stderr']);`.
